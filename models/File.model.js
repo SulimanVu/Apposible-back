@@ -1,0 +1,41 @@
+const mongoose = require("mongoose");
+
+const fileSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+  accessLink: {
+    type: String,
+  },
+  size: {
+    type: Number,
+    default: 0,
+  },
+  path: {
+    type: String,
+    default: "",
+  },
+  user: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "User",
+  },
+  parent: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "File",
+  },
+  childs: [
+    {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "File",
+    },
+  ],
+});
+
+const File = mongoose.model("File", fileSchema);
+
+module.exports = File;
