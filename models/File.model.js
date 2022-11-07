@@ -9,9 +9,7 @@ const fileSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  accessLink: {
-    type: String,
-  },
+  accessLink: String,
   size: {
     type: Number,
     default: 0,
