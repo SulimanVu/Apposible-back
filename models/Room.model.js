@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const roomSchema = mongoose.Schema({
   name: String,
-  Users: [
+  users: [
     {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "User",

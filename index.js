@@ -10,6 +10,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const userRouter = require("./routes/user.route");
 const fileRouter = require("./routes/file.route");
+const roomRouter = require("./routes/room.route");
 
 app.use(fileUpload({}));
 app.use(cors());
@@ -22,6 +23,7 @@ app.use("/public", express.static(path.resolve(__dirname, "public")));
 //Routes
 app.use("/api/auth", userRouter);
 app.use("/api/files", fileRouter);
+app.use("/room", roomRouter);
 
 mongoose
   .connect(process.env.MONGO_SERVER)
