@@ -7,7 +7,7 @@ const File = require("../models/File.model");
 
 module.exports.userController = {
   registration: async (req, res) => {
-    const { login, password, name, email, surname, patronymic } = req.body;
+    const { login, password, name, email, avatar } = req.body;
 
     try {
       const hash = await bcrypt.hash(password, +process.env.BCRYPT_ROUNDS);
@@ -16,8 +16,7 @@ module.exports.userController = {
         login,
         name,
         email,
-        surname,
-        patronymic,
+        avatar
       });
       await user.save()
       await fileService.createDir(new File({ user: user.id, name: "" }));
