@@ -4,6 +4,17 @@ const roomSchema = mongoose.Schema({
   name: String,
   users: [
     {
+      user: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "User",
+      },
+      comment: {
+        type: String,
+      },
+    },
+  ],
+  access: [
+    {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "User",
     },

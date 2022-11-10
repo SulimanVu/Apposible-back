@@ -1,12 +1,13 @@
+const { access } = require("fs");
 const Room = require("../models/Room.model");
-const User = require("../models/User.model");
 
 module.exports.roomController = {
   createRoom: async (req, res) => {
     try {
       const data = await Room.create({
         name: req.body.name,
-        users: req.params.id,
+        users: { user: req.params.id },
+        access: req.params.id,
       });
 
       res.json(data);
@@ -33,9 +34,10 @@ module.exports.roomController = {
   addUserRoom: async (req, res) => {
     try {
       const data = await Room.findByIdAndUpdate(req.params.id, {
-        $addToSet: { users: req.body.users },
+        $push: { users: { user: req.body.user, comment: req.body.comment } },
+        $addToSet: { access: req.body.user },
       });
-      const result = await data.populate("users");
+      const result = await data;
       res.json(result);
     } catch (error) {
       res.json(error);
@@ -46,14 +48,14 @@ module.exports.roomController = {
       const room = await Room.findById(req.params.id);
 
       const user = await room.users.find((item) => {
-        return item.toString() === req.body.users;
+        return item.user.toString() === req.body.user;
       });
-
       const data = await Room.updateOne(room, {
-        $pull: { users: user },
+        $pull: { access: user.user.toString() },
       });
 
-      res.json(data);
+      const result = await data.map((item) => item.populate("access"));
+      res.json(result);
     } catch (error) {
       res.json(error);
     }
