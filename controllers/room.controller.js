@@ -4,20 +4,20 @@ const Room = require("../models/Room.model");
 module.exports.roomController = {
   createRoom: async (req, res) => {
     try {
+      const { name, access } = req.body;
       const data = await Room.create({
-        name: req.body.name,
-        users: { user: req.params.id },
-        access: req.params.id,
+        name,
+        access,
       });
-
-      res.json(data);
+      const result = await data.populate("access");
+      res.json(result);
     } catch (error) {
       res.json(error);
     }
   },
   getRoom: async (req, res) => {
     try {
-      const data = await Room.find();
+      const data = await Room.find().populate("access");
       res.json(data);
     } catch (error) {
       res.json(error);
@@ -31,14 +31,33 @@ module.exports.roomController = {
       res.json(error);
     }
   },
-  addUserRoom: async (req, res) => {
+  addComment: async (req, res) => {
     try {
+      const { user, comment } = req.body;
+      const room = await Room.findById(req.params.id);
+      const result = room.access.filter((item) => item.toString() === user);
+
+      if (result.toString()) {
+        const data = await Room.findByIdAndUpdate(req.params.id, {
+          $push: { users: { user: user, comment: comment } },
+        });
+
+        res.json(data.users);
+      } else {
+        res.json("Такой пользователь не найден");
+      }
+    } catch (error) {
+      res.json(error);
+    }
+  },
+  addUserToRoom: async (req, res) => {
+    try {
+      const { user } = req.body;
       const data = await Room.findByIdAndUpdate(req.params.id, {
-        $push: { users: { user: req.body.user, comment: req.body.comment } },
-        $addToSet: { access: req.body.user },
-      });
-      const result = await data;
-      res.json(result);
+        $addToSet: { access: user },
+      }).populate("access");
+
+      return await res.json(data);
     } catch (error) {
       res.json(error);
     }
@@ -50,12 +69,11 @@ module.exports.roomController = {
       const user = await room.users.find((item) => {
         return item.user.toString() === req.body.user;
       });
+
       const data = await Room.updateOne(room, {
         $pull: { access: user.user.toString() },
       });
-
-      const result = await data.map((item) => item.populate("access"));
-      res.json(result);
+      res.json(data);
     } catch (error) {
       res.json(error);
     }
