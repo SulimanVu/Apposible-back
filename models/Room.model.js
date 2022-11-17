@@ -11,6 +11,9 @@ const roomSchema = mongoose.Schema({
       comment: {
         type: String,
       },
+      time: {
+        type: String
+      }
     },
   ],
   access: [

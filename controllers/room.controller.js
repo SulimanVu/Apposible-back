@@ -4,10 +4,10 @@ const Room = require("../models/Room.model");
 module.exports.roomController = {
   createRoom: async (req, res) => {
     try {
-      const { name, access } = req.body;
+      const { name } = req.body;
       const data = await Room.create({
         name,
-        access,
+        access: req.params.id,
       });
       const result = await data.populate("access");
       res.json(result);
@@ -17,7 +17,7 @@ module.exports.roomController = {
   },
   getRoom: async (req, res) => {
     try {
-      const data = await Room.find().populate("access");
+      const data = await Room.find().populate('users.user access');
       res.json(data);
     } catch (error) {
       res.json(error);
@@ -33,13 +33,13 @@ module.exports.roomController = {
   },
   addComment: async (req, res) => {
     try {
-      const { user, comment } = req.body;
+      const { user, comment, time } = req.body;
       const room = await Room.findById(req.params.id);
       const result = room.access.filter((item) => item.toString() === user);
 
       if (result.toString()) {
         const data = await Room.findByIdAndUpdate(req.params.id, {
-          $push: { users: { user: user, comment: comment } },
+          $push: { users: { user: user, comment: comment, time: time } },
         });
 
         res.json(data.users);
