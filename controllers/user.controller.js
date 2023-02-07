@@ -1,4 +1,5 @@
 const User = require("../models/User.model");
+const Room = require("../models/Room.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fileService = require("../services/file.service");
@@ -15,9 +16,9 @@ module.exports.userController = {
         login,
         name,
         email,
-        avatar
+        avatar,
       });
-      await user.save()
+      await user.save();
       await fileService.createDir(new File({ user: user.id, name: "" }));
       res.json(user);
     } catch (error) {
@@ -56,6 +57,14 @@ module.exports.userController = {
   },
   deleteUser: async (req, res) => {
     const data = await User.findByIdAndDelete(req.params.id);
+    res.json(data);
+  },
+  addUserRoom: async (req, res) => {
+    const room = await Room.findById(req.params.id);
+    const user = await User.findById(req.body._id);
+
+    const data = await room.update({ $push: { access: user } });
+
     res.json(data);
   },
 };
