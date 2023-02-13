@@ -59,12 +59,4 @@ module.exports.userController = {
     const data = await User.findByIdAndDelete(req.params.id);
     res.json(data);
   },
-  addUserRoom: async (req, res) => {
-    const room = await Room.findById(req.params.id);
-    const user = await User.findById(req.body._id);
-
-    const data = await room.update({ $push: { access: user } });
-
-    res.json(data);
-  },
 };

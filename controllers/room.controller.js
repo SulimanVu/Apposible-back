@@ -1,4 +1,3 @@
-const { access } = require("fs");
 const Room = require("../models/Room.model");
 
 module.exports.roomController = {
@@ -17,7 +16,7 @@ module.exports.roomController = {
   },
   getRoom: async (req, res) => {
     try {
-      const data = await Room.find().populate('users.user access');
+      const data = await Room.find().populate("users.user access");
       res.json(data);
     } catch (error) {
       res.json(error);
@@ -52,12 +51,13 @@ module.exports.roomController = {
   },
   addUserToRoom: async (req, res) => {
     try {
-      const { user } = req.body;
       const data = await Room.findByIdAndUpdate(req.params.id, {
-        $addToSet: { access: user },
+        $addToSet: { access: req.body.user },
       }).populate("access");
 
-      return await res.json(data);
+      const result = await res.json(data);
+
+      return result;
     } catch (error) {
       res.json(error);
     }
@@ -66,12 +66,12 @@ module.exports.roomController = {
     try {
       const room = await Room.findById(req.params.id);
 
-      const user = await room.users.find((item) => {
-        return item.user.toString() === req.body.user;
+      const user = await room.access.find((item) => {
+        return item.toString() === req.body.user;
       });
 
       const data = await Room.updateOne(room, {
-        $pull: { access: user.user.toString() },
+        $pull: { access: user.toString() },
       });
       res.json(data);
     } catch (error) {
