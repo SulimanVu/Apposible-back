@@ -51,29 +51,30 @@ module.exports.roomController = {
   },
   addUserToRoom: async (req, res) => {
     try {
-      const data = await Room.findByIdAndUpdate(req.params.id, {
-        $addToSet: { access: req.body.user },
-      }).populate("access");
+      const data = await Room.findByIdAndUpdate(
+        req.params.id,
+        {
+          $addToSet: { access: req.body.user },
+        },
+        { new: true }
+      ).populate("access");
 
-      const result = await res.json(data);
-
-      return result;
+      return res.json(data);
     } catch (error) {
       res.json(error);
     }
   },
   deleteUserRoom: async (req, res) => {
     try {
-      const room = await Room.findById(req.params.id);
+      const data = await Room.findByIdAndUpdate(
+        req.params.id,
+        {
+          $pull: { access: req.body.user },
+        },
+        { new: true }
+      ).populate("access");
 
-      const user = await room.access.find((item) => {
-        return item.toString() === req.body.user;
-      });
-
-      const data = await Room.updateOne(room, {
-        $pull: { access: user.toString() },
-      });
-      res.json(data);
+      return res.json();
     } catch (error) {
       res.json(error);
     }
