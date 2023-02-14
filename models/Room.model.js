@@ -12,8 +12,8 @@ const roomSchema = mongoose.Schema({
         type: String,
       },
       time: {
-        type: String
-      }
+        type: String,
+      },
     },
   ],
   access: [
@@ -22,6 +22,10 @@ const roomSchema = mongoose.Schema({
       ref: "User",
     },
   ],
+  admin: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "User",
+  },
 });
 
 const Room = mongoose.model("Room", roomSchema);

@@ -7,8 +7,9 @@ module.exports.roomController = {
       const data = await Room.create({
         name,
         access: req.params.id,
+        admin: req.params.id,
       });
-      const result = await data.populate("access");
+      const result = await data.populate("access admin");
       res.json(result);
     } catch (error) {
       res.json(error);
@@ -16,7 +17,7 @@ module.exports.roomController = {
   },
   getRoom: async (req, res) => {
     try {
-      const data = await Room.find().populate("users.user access");
+      const data = await Room.find().populate("users.user access admin");
       res.json(data);
     } catch (error) {
       res.json(error);
@@ -74,7 +75,7 @@ module.exports.roomController = {
         { new: true }
       ).populate("access");
 
-      return res.json();
+      return res.json(data);
     } catch (error) {
       res.json(error);
     }
