@@ -22,6 +22,10 @@ const fileSchema = mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "User",
   },
+  room: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "Room",
+  },
   parent: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "File",

@@ -1,15 +1,19 @@
 const Room = require("../models/Room.model");
+const fileService = require("../services/file.service");
+const File = require("../models/File.model");
 
 module.exports.roomController = {
   createRoom: async (req, res) => {
     try {
       const { name } = req.body;
-      const data = await Room.create({
+      const data = new Room({
         name,
         access: req.params.id,
         admin: req.params.id,
       });
       const result = await data.populate("access admin");
+
+      await fileService.createDir(new File({ room: result._id, name: "" }));
       res.json(result);
     } catch (error) {
       res.json(error);

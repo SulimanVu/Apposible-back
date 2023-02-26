@@ -3,10 +3,15 @@ const File = require("../models/File.model");
 const User = require("../models/User.model");
 
 module.exports.fileController = {
-   createDir: async (req, res)=> {
+  createDir: async (req, res) => {
     try {
-      const { name, type, parent } = req.body;
-      const file = await File.create({ name, type, parent, user: req.user.id });
+      const { name, type, parent, room } = req.body;
+      const file = await File.create({
+        name,
+        type,
+        parent,
+        room,
+      });
       const parentFile = await File.findOne({ _id: parent });
 
       if (!parentFile) {
@@ -25,12 +30,15 @@ module.exports.fileController = {
       return res.status(400).json(error);
     }
   },
-  fetFiles: async(req, res)=>{
+  fetFiles: async (req, res) => {
     try {
-        const files = await File.find({user: req.user.id, parent: req.query.parent})
-        return res.json({files})
+      const files = await File.find({
+        room: req.body.room,
+        parent: req.query.parent,
+      });
+      return res.json({ files });
     } catch (error) {
-        res.status(500).json({message: "can not get files"})
+      res.status(500).json({ message: "can not get files" });
     }
-  }
-}
+  },
+};

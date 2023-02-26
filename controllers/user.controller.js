@@ -1,9 +1,8 @@
 const User = require("../models/User.model");
-const Room = require("../models/Room.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const fileService = require("../services/file.service");
-const File = require("../models/File.model");
+// const fileService = require("../services/file.service");
+// const File = require("../models/File.model");
 
 module.exports.userController = {
   registration: async (req, res) => {
@@ -19,7 +18,7 @@ module.exports.userController = {
         avatar,
       });
       await user.save();
-      await fileService.createDir(new File({ user: user.id, name: "" }));
+      // await fileService.createDir(new File({ user: user.id, name: "" }));
       res.json(user);
     } catch (error) {
       res.json(error);
