@@ -31,11 +31,13 @@ module.exports.fileController = {
     }
   },
   fetFiles: async (req, res) => {
+    const { room } = req.body;
     try {
       const files = await File.find({
-        room: req.body.room,
+        room,
         parent: req.query.parent,
       });
+
       return res.json({ files });
     } catch (error) {
       res.status(500).json({ message: "can not get files" });
