@@ -30,7 +30,7 @@ module.exports.fileController = {
       return res.status(400).json(error);
     }
   },
-  fetFiles: async (req, res) => {
+  getFiles: async (req, res) => {
     const { room } = req.body;
     try {
       const files = await File.find({
@@ -38,7 +38,7 @@ module.exports.fileController = {
         parent: req.query.parent,
       });
 
-      return res.json({ files });
+      return res.json(files);
     } catch (error) {
       res.status(500).json({ message: "can not get files" });
     }
