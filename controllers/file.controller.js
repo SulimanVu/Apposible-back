@@ -30,11 +30,11 @@ module.exports.fileController = {
       return res.status(400).json(error);
     }
   },
+  
   getFiles: async (req, res) => {
-    const { room } = req.body;
     try {
       const files = await File.find({
-        room,
+        room: req.query.room,
         parent: req.query.parent,
       });
 
