@@ -18,6 +18,11 @@ const fileSchema = mongoose.Schema({
     type: String,
     default: "",
   },
+  date: {
+    type: Date,
+    default: Date.now()
+  }
+  ,
   user: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "User",
