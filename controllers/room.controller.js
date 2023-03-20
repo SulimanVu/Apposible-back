@@ -12,7 +12,7 @@ module.exports.roomController = {
         admin: req.params.id,
       });
       data.save();
-      
+
       await fileService.createDir(new File({ room: data._id, name: "" }));
       const result = await data.populate("access admin");
 

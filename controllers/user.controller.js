@@ -58,4 +58,18 @@ module.exports.userController = {
     const data = await User.findByIdAndDelete(req.params.id);
     res.json(data);
   },
+  changeUser: async (req, res) => {
+    const { login, password, name, email, avatar } = req.body;
+
+    const data = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        name,
+        email,
+        avatar,
+      },
+      { new: true }
+    );
+    res.json(data);
+  },
 };
