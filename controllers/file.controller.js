@@ -30,7 +30,7 @@ module.exports.fileController = {
       return res.status(400).json(error);
     }
   },
-  
+
   getFiles: async (req, res) => {
     try {
       const files = await File.find({
