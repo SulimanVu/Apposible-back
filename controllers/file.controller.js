@@ -1,6 +1,8 @@
 const fileService = require("../services/file.service");
 const File = require("../models/File.model");
-const User = require("../models/User.model");
+require("dotenv").config();
+const fs = require("fs");
+const Room = require("../models/Room.model");
 
 module.exports.fileController = {
   createDir: async (req, res) => {
@@ -41,6 +43,55 @@ module.exports.fileController = {
       return res.json(files);
     } catch (error) {
       res.status(500).json({ message: "can not get files" });
+    }
+  },
+
+  fileUpload: async (req, res) => {
+    try {
+      const file = await req.files.file;
+      const parent = await File.findOne({
+        room: req.query.room,
+        _id: req.query.parent,
+      });
+
+      const room = await Room.findOne({ _id: req.query.room });
+
+      if (room.usedSpace + file.size > room.diskSpace) {
+        return res.status(400).json({ message: "There no space on the disk" });
+      }
+
+      room.usedSpace = (await room.usedSpace) + file.size;
+
+      let path;
+      if (parent) {
+        path = `${process.env.FILE_PATH}\\${room._id}\\${parent.path}\\${file.name}`;
+      } else {
+        path = `${process.env.FILE_PATH}\\${room._id}\\${file.name}`;
+      }
+
+      if (fs.existsSync(path)) {
+        res.status(400).json({ message: "File already exist" });
+      }
+
+      file.mv(path);
+
+      const type = await file.name.split(".").pop();
+
+      const dbFile = new File({
+        name: file.name,
+        type,
+        size: file.size,
+        path: parent?.path,
+        parent: parent?._id,
+        room: req.query.room,
+      });
+
+      await room.save();
+      await dbFile.save();
+
+      res.json(dbFile);
+    } catch (error) {
+      res.status(400).json({ message: "can not get files" });
     }
   },
 };
