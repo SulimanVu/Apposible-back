@@ -50,11 +50,11 @@ module.exports.fileController = {
     try {
       const file = await req.files.file;
       const parent = await File.findOne({
-        room: req.query.room,
-        _id: req.query.parent,
+        room: req.body.room,
+        _id: req.body.parent,
       });
 
-      const room = await Room.findOne({ _id: req.query.room });
+      const room = await Room.findOne({ _id: req.body.room });
 
       if (room.usedSpace + file.size > room.diskSpace) {
         return res.status(400).json({ message: "There no space on the disk" });
@@ -83,7 +83,7 @@ module.exports.fileController = {
         size: file.size,
         path: parent?.path,
         parent: parent?._id,
-        room: req.query.room,
+        room: req.body.room,
       });
 
       await room.save();
