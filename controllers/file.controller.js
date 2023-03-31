@@ -14,6 +14,7 @@ module.exports.fileController = {
         parent,
         room,
       });
+
       const parentFile = await File.findOne({ _id: parent });
 
       if (!parentFile) {
@@ -76,12 +77,16 @@ module.exports.fileController = {
       file.mv(path);
 
       const type = await file.name.split(".").pop();
+      let filePath = file.name;
+      if (parent) {
+        filePath = parent.path + "\\" + file.name;
+      }
 
       const dbFile = new File({
         name: file.name,
         type,
         size: file.size,
-        path: parent?.path,
+        path: filePath,
         parent: parent?._id,
         room: req.body.room,
       });
@@ -91,7 +96,46 @@ module.exports.fileController = {
 
       res.json(dbFile);
     } catch (error) {
-      res.status(400).json({ message: "can not get files" });
+      res.status(500).json({ message: "can not get files" });
+    }
+  },
+  downLoadFile: async (req, res) => {
+    try {
+      const file = await File.findOne({
+        _id: req.query.id,
+        room: req.query.room,
+      });
+      const path =
+        process.env.FILE_PATH +
+        "\\" +
+        req.query.room +
+        "\\" +
+        file.path +
+        "\\" +
+        file.name;
+      if (fs.existsSync(path)) {
+        return res.download(path, file.name);
+      }
+      return res.status(400).json({ message: "Download error" });
+    } catch (error) {
+      res.status(500).json({ message: "can not download files" });
+    }
+  },
+  
+  deleteFile: async (req, res) => {
+    try {
+      const file = await File.findOne({
+        _id: req.query.id,
+        room: req.query.room,
+      });
+      if (!file) {
+        return res.status(400).json({ message: "file not found" });
+      }
+      fileService.deleteFile(file);
+      await file.remove();
+      return req.json({ message: "File was deleted" });
+    } catch (error) {
+      res.status(400).json({ message: "Dir is not empty" });
     }
   },
 };
