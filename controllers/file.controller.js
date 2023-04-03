@@ -102,17 +102,16 @@ module.exports.fileController = {
   downLoadFile: async (req, res) => {
     try {
       const file = await File.findOne({
-        _id: req.query.id,
         room: req.query.room,
+        _id: req.query.id,
       });
-      const path =
-        process.env.FILE_PATH +
+      const path = await (process.env.FILE_PATH +
         "\\" +
         req.query.room +
         "\\" +
         file.path +
         "\\" +
-        file.name;
+        file.name);
       if (fs.existsSync(path)) {
         return res.download(path, file.name);
       }
@@ -121,7 +120,7 @@ module.exports.fileController = {
       res.status(500).json({ message: "can not download files" });
     }
   },
-  
+
   deleteFile: async (req, res) => {
     try {
       const file = await File.findOne({
