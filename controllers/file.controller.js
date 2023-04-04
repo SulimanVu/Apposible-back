@@ -105,13 +105,12 @@ module.exports.fileController = {
         room: req.query.room,
         _id: req.query.id,
       });
-      const path = await (process.env.FILE_PATH +
+      const path =
+        process.env.FILE_PATH +
         "\\" +
         req.query.room +
         "\\" +
-        file.path +
-        "\\" +
-        file.name);
+        file.path
       if (fs.existsSync(path)) {
         return res.download(path, file.name);
       }
