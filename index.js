@@ -11,7 +11,7 @@ const { Server } = require("socket.io");
 const userRouter = require("./routes/user.route");
 const fileRouter = require("./routes/file.route");
 const roomRouter = require("./routes/room.route");
-import { serverUrl } from "./serverUrl";
+const { serverUrl } = require("./serverUrl")
 
 app.use(fileUpload({}));
 app.use(cors());
