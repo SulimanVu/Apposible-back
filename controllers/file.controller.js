@@ -19,11 +19,18 @@ module.exports.fileController = {
 
       if (!parentFile) {
         file.path = name;
-        await fileService.createDir(file);
+        if (file.name.includes('.')) {
+          await fileService.createDir(file, { isFile: true });
+        } else {
+          await fileService.createDir(file);
+        }
       } else {
         file.path = `${parentFile.path}\\${file.name}`;
-        await fileService.createDir(file);
-
+        if (file.name.includes('.')) {
+          await fileService.createDir(file, { isFile: true });
+        } else {
+          await fileService.createDir(file);
+        }
         parentFile.childs.push(file._id);
         await parentFile.save();
       }
@@ -44,6 +51,18 @@ module.exports.fileController = {
       return res.json(files);
     } catch (error) {
       res.status(500).json({ message: "can not get files" });
+    }
+  },
+
+  getFile: async (req, res) => {
+    try {
+      const file = await File.findOne({
+        name: req.query.name
+      })
+
+      return res.json(file)
+    } catch (error) {
+      res.status(404).json({ message: "can not get FILE" })
     }
   },
 
@@ -99,6 +118,7 @@ module.exports.fileController = {
       res.status(500).json({ message: "can not get files" });
     }
   },
+
   downLoadFile: async (req, res) => {
     try {
       const file = await File.findOne({
