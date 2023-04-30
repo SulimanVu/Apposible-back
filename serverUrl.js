@@ -3,7 +3,7 @@ const { NODE_ENV } = process.env;
 export let serverUrl;
 
 if (NODE_ENV === "development") {
-  serverUrl = "http://localhost:3001"; // адрес сервера на локалке
+  serverUrl = "http://localhost:3000"; // адрес сервера на локалке
 } else {
-  serverUrl = ""; // адрес сервера после выгрузки
+  serverUrl = "https://apposible.onrender.com"; // адрес сервера после выгрузки
 }
