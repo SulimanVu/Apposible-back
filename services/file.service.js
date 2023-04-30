@@ -3,16 +3,20 @@ const fs = require("fs");
 const File = require("../models/File.model");
 
 class FileService {
-  createDir(file) {
-    // const filePath = `${process.env.FILE_PATH}\\${file.user}\\${file.path}`;
+  createDir(file, isFile = false) {
     const filePath = `${process.env.FILE_PATH}\\${file.room}\\${file.path}`;
     return new Promise((resolve, reject) => {
       try {
         if (!fs.existsSync(filePath)) {
-          fs.mkdirSync(filePath);
-          return resolve({ message: "File was created" });
+          if (isFile) {
+            fs.writeFileSync(filePath, '');
+            return resolve({ message: "File was created" });
+          } else {
+            fs.mkdirSync(filePath);
+            return resolve({ message: "Directory was created" });
+          }
         } else {
-          return reject({ message: "File already exist" });
+          return reject({ message: "File or directory already exists" });
         }
       } catch (error) {
         return reject({ message: "File error", error });
@@ -20,16 +24,16 @@ class FileService {
     });
   }
 
-  deleteFile(file){
+  deleteFile(file) {
     const path = this.getPath(file)
-    if(file.type === 'dir'){
+    if (file.type === 'dir') {
       fs.rmdirSync(path)
-    }else{
+    } else {
       fs.unlinkSync(path)
     }
   }
 
-  getPath(file){
+  getPath(file) {
     return process.env.FILE_PATH + '\\' + file.room + '\\' + file.path
   }
 }
