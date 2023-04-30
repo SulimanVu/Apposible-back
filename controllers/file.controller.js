@@ -106,11 +106,7 @@ module.exports.fileController = {
         _id: req.query.id,
       });
       const path =
-        process.env.FILE_PATH +
-        "\\" +
-        req.query.room +
-        "\\" +
-        file.path
+        process.env.FILE_PATH + "\\" + req.query.room + "\\" + file.path;
       if (fs.existsSync(path)) {
         return res.download(path, file.name);
       }
@@ -123,9 +119,10 @@ module.exports.fileController = {
   deleteFile: async (req, res) => {
     try {
       const file = await File.findOne({
-        _id: req.query.id,
         room: req.query.room,
+        _id: req.query.id,
       });
+
       if (!file) {
         return res.status(400).json({ message: "file not found" });
       }
