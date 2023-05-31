@@ -11,7 +11,8 @@ const { Server } = require("socket.io");
 const userRouter = require("./routes/user.route");
 const fileRouter = require("./routes/file.route");
 const roomRouter = require("./routes/room.route");
-const { serverUrl } = require("./serverUrl")
+const taskRouter = require("./routes/task.route");
+const { serverUrl } = require("./serverUrl");
 
 app.use(fileUpload({}));
 app.use(cors());
@@ -25,6 +26,7 @@ app.use("/public", express.static(path.resolve(__dirname, "public")));
 app.use("/api/auth", userRouter);
 app.use("/api/files", fileRouter);
 app.use("/room", roomRouter);
+app.use("/task", taskRouter);
 
 mongoose
   .connect(process.env.MONGO_SERVER)
