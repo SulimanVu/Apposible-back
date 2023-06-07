@@ -14,16 +14,18 @@ module.exports.roomController = {
       data.save();
 
       await fileService.createDir(new File({ room: data._id, name: "" }));
-      const result = await data.populate("access admin");
+      // const result = await data.populate("access admin");
 
-      res.json(result);
+      res.json(data);
     } catch (error) {
       res.json(error);
     }
   },
   getRoom: async (req, res) => {
     try {
-      const data = await Room.find().populate("users.user access admin");
+      const data = await Room.find({ admin: req.params.id }).populate(
+        "users.user access admin"
+      );
       res.json(data);
     } catch (error) {
       res.json(error);
