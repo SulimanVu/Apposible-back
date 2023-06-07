@@ -23,7 +23,7 @@ module.exports.roomController = {
   },
   getRoom: async (req, res) => {
     try {
-      const data = await Room.find({ admin: req.params.id }).populate(
+      const data = await Room.find({ access: req.params.id }).populate(
         "users.user access admin"
       );
       res.json(data);
