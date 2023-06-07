@@ -12,7 +12,7 @@ const userRouter = require("./routes/user.route");
 const fileRouter = require("./routes/file.route");
 const roomRouter = require("./routes/room.route");
 const taskRouter = require("./routes/task.route");
-const { serverUrl } = require("./serverUrl");
+// const { serverUrl } = require("./serverUrl");
 
 // WebRTC
 const { version, validate } = require("uuid");
@@ -50,7 +50,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: `${serverUrl}`,
+    // origin: serverUrl,
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
