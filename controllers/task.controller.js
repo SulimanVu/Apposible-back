@@ -74,6 +74,7 @@ module.exports.taskController = {
   deleteTask: async (req, res) => {
     try {
       const data = await Task.findByIdAndDelete(req.params.id);
+      
       res.json(data);
     } catch (error) {
       res.json(error);
