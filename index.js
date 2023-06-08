@@ -22,10 +22,6 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-// WebRTC
-// const publicPath = path.join(__dirname, "build");
-// app.use(express.static(publicPath));
-
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/public", express.static(path.resolve(__dirname, "public")));
 
@@ -35,10 +31,6 @@ app.use("/api/files", fileRouter);
 app.use("/room", roomRouter);
 app.use("/task", taskRouter);
 
-// WebRTC
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(publicPath, "index.html"));
-// });
 
 mongoose
   .connect(process.env.MONGO_SERVER)
