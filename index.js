@@ -12,7 +12,6 @@ const userRouter = require("./routes/user.route");
 const fileRouter = require("./routes/file.route");
 const roomRouter = require("./routes/room.route");
 const taskRouter = require("./routes/task.route");
-// const { serverUrl } = require("./serverUrl");
 
 // WebRTC
 const { version, validate } = require("uuid");
