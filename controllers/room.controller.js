@@ -15,7 +15,7 @@ module.exports.roomController = {
 
       await fileService.createDir(new File({ room: data._id, name: "" }));
       // const result = await data.populate("access admin");
-
+      
       res.json(data);
     } catch (error) {
       res.json(error);
